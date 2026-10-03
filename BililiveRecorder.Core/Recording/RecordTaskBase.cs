@@ -118,6 +118,10 @@ namespace BililiveRecorder.Core.Recording
                 this.logger.Information("已启用 91Zhibo FLV 实时解密");
                 stream = new Zhibo91FlvDecryptStream(stream);
             }
+            else if (this.room.RoomConfig.Patch == "Wanwu")
+            {
+                stream = new WanwuFlvDecryptStream(stream, this.room.RoomConfig.AdditionalParameter!);
+            }
 
             this.ioStatsLastTrigger = DateTimeOffset.UtcNow;
             this.durationSinceNoDataReceived = TimeSpan.Zero;
@@ -303,6 +307,12 @@ namespace BililiveRecorder.Core.Recording
                     headers.Add("Origin", "https://www.ttinglive.com");
                     headers.Add("Referer", "https://www.ttinglive.com");
                     headers.Add("Accept", HttpHeaderAccept);
+                }
+                else if (patch.Equals("Wanwu"))
+                {
+                    headers.Add("User-Agent", "Dalvik/2.1.0 (Android 11; HUAWEI P5 Build/RX3B.211001.002)");
+                    headers.Add("Accept-Encoding", "identity");
+                    headers.Add("Connection", "close");
                 }
                 else if (patch.Equals("91Zhibo"))
                 {
